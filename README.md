@@ -1,6 +1,7 @@
 # SWG
 
 ## Coordinations
+
 | Name                      | Domain                |
 | ------------------------- |:---------------------:|
 | Northern Atlantic         | [22N, 71N]x[81W, 51E] |
