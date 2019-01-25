@@ -1,7 +1,12 @@
 # SWG
 
 ## Coordinations
-- Europe: [35N, 60N]x[10W, 25E]
+| Name | Domain |
+| ----------- | ----------- |
+| Northern Atlantic |  |
+| Europe | [35N, 60N]x[10W, 25E] |
+
+
 
 ## Function
 - [fun_estimation](https://github.com/cfcforever/SWG/blob/master/function/fun_estimation_t2m.R)
