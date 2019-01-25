@@ -1,0 +1,663 @@
+---
+title: "about SWG and FAR"
+output:
+  html_notebook:
+    toc: yes
+    toc_depth: 3
+  html_document:
+    toc: yes
+    toc_depth: '3'
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+```{r, eval=FALSE, echo=FALSE}
+#### load packages ####
+library(ncdf4)
+
+library(stats4)
+library(VGAM)
+library(timeDate)
+
+library(CDFt)
+
+library(ggplot2)
+library(reshape2)
+
+library(evd)
+
+library(fields)
+
+library(lubridate)
+
+library(fitdistrplus)
+
+library(xtable)
+  
+library(RColorBrewer)
+library(colorRamps)
+
+library(factoextra)
+```
+
+```{r, eval=FALSE}
+#### Important saved RData ####
+## case_name
+load("~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+
+## OBS : 1979-2017 à Paris
+load("~/Documents/LSCE/SWG/tmean_48_50_N_01_04_E_1979_2017.RData")
+DATE_OBS = atoms(timeSequence(from="1979-01-01",to="2017-12-31",by='day'))
+
+## matrix of month
+MON=c(12,1:11)
+MON=matrix(MON,nrow=4,ncol=3,byrow=T)
+
+## var for season 
+SEAS=c('DJF','MAM','JJA','SON')
+season=c('Winter','Spring','Summer','Fall')
+
+## d_intensity: 1999-2017
+load("~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+
+## NAO_1, AO_1, ENSO
+load("~/Documents/LSCE/RDATA/Climate_indices/NAO_1.RData")
+load("~/Documents/LSCE/RDATA/Climate_indices/AO_1.RData")
+load("~/Documents/LSCE/RDATA/Climate_indices/ENSO.RData")
+```
+
+# Predictor
+## slp + sst
+```{r, eval=FALSE}
+nvar = 4
+cb_table = matrix(NA, nrow = 2^nvar-1, ncol = nvar)
+n = 1
+for (k in 1:nvar){
+  temp = combn(1:nvar, k)
+  m = nrow(temp)
+  for (i in 1:ncol(temp)){
+    cb_table[n, 1:m] = temp[,i]
+    n = n + 1
+  }
+}
+
+cb_table = as.data.frame(cb_table)
+# save(cb_table, file = "~/Documents/LSCE/SWG/NA_slp_sst/cb_table_sans_nom.RData")
+
+cb_table_name = cb_table
+  
+cb_table[cb_table==1] = "slp_PC"
+cb_table[cb_table==2] = "slp_SD"
+cb_table[cb_table==3] = "sst_PC"
+cb_table[cb_table==4] = "sst_SD"
+# save(cb_table, file = "~/Documents/LSCE/SWG/NA_slp_sst/cb_table.RData")
+
+case_name = rep(NA, nrow(cb_table))
+for (k in 1:nrow(cb_table)){
+  case_name[k] = paste(cb_table[k,!is.na(cb_table[k,])], collapse = "+")
+}
+# save(case_name, file = "~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+```
+
+\newpage
+\begin{table}[ht]
+\centering
+\begin{tabular}{rllll}
+  \hline
+ & V1 & V2 & V3 & V4 \\ 
+  \hline
+1 & slp\_PC &  &  &  \\ 
+  2 & slp\_SD &  &  &  \\ 
+  3 & sst\_PC &  &  &  \\ 
+  4 & sst\_SD &  &  &  \\ 
+  5 & slp\_PC & slp\_SD &  &  \\ 
+  6 & slp\_PC & sst\_PC &  &  \\ 
+  7 & slp\_PC & sst\_SD &  &  \\ 
+  8 & slp\_SD & sst\_PC &  &  \\ 
+  9 & slp\_SD & sst\_SD &  &  \\ 
+  10 & sst\_PC & sst\_SD &  &  \\ 
+  11 & slp\_PC & slp\_SD & sst\_PC &  \\ 
+  12 & slp\_PC & slp\_SD & sst\_SD &  \\ 
+  13 & slp\_PC & sst\_PC & sst\_SD &  \\ 
+  14 & slp\_SD & sst\_PC & sst\_SD &  \\ 
+  15 & slp\_PC & slp\_SD & sst\_PC & sst\_SD \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+# estimation t2m
+```{r eval=FALSE}
+for (k in 1:15)(
+  fun_estimation(predictor = '~/Documents/LSCE/SWG/NA_slp_sst/pca/predictor_',
+                 NUM = k,
+                 input.tmean = "~/Documents/LSCE/SWG/tmean_48_50_N_01_04_E_1979_2017.RData",
+                 output.name = '~/Documents/LSCE/SWG/NA_slp_sst/tmean/1999_2017/SWG_ERAI_ESD_tmean_',
+                 year.begin = 1999,
+                 year.end = 2017)
+)
+```
+
+# simulation t2m
+```{r eval=FALSE}
+for (k in 1:15){
+  cat(k, "\n")
+  fun_simulation(predictor = '~/Documents/LSCE/SWG/NA_slp_sst/pca/predictor_',
+                 parameter = '~/Documents/LSCE/SWG/NA_slp_sst/tmean/1979_1998/SWG_ERAI_ESD_tmean_',
+                 NUM = k, 
+                 type = "nat",
+                 output = '~/Documents/LSCE/SWG/NA_slp_sst/tmean/nat/', 
+                 y1 = 1999, y2 = 2017,
+                 year.begin = 1979, year.end = 1998)
+}
+
+for (k in 1:15){
+  cat(k, "\n")
+  fun_simulation(predictor = '~/Documents/LSCE/SWG/NA_slp_sst/pca/predictor_',
+                 parameter = '~/Documents/LSCE/SWG/NA_slp_sst/tmean/1999_2017/SWG_ERAI_ESD_tmean_',
+                 NUM = k, 
+                 type = "rea",
+                 output = '~/Documents/LSCE/SWG/NA_slp_sst/tmean/rea/', 
+                 y1 = 1999, y2 = 2017,
+                 year.begin = 1999, year.end = 2017)
+}
+```
+
+# stationnary model
+```{r eval=FALSE}
+load("~/Documents/LSCE/SWG/tmean_48_50_N_01_04_E_1979_2017.RData")
+DATE_OBS = atoms(timeSequence(from="1979-01-01",to="2017-12-31",by='day'))
+
+MON=c(12,1:11)
+MON=matrix(MON,nrow=4,ncol=3,byrow=T)
+SEAS=c('DJF','MAM','JJA','SON')
+season=c('Winter','Spring','Summer','Fall')
+
+data1 = tmean[DATE_OBS$Y>=1999 & DATE_OBS$Y<=2017,]
+DATE1 = atoms(timeSequence(from="1999-01-01",to="2017-12-31",by='day'))
+
+data2 = tmean[DATE_OBS$Y>=1979 & DATE_OBS$Y<=1998,]
+DATE2 = atoms(timeSequence(from="1979-01-01",to="1998-12-31",by='day'))
+
+## nat
+mean = array(NaN,c(length(data1),1)) # matrice de probas d'occurrence
+sd = array(NaN,c(length(data1),1))
+
+for (seas in 1:4){
+  idxdates1 = which(DATE1['m']==MON[seas,1] | DATE1['m']==MON[seas,2] | DATE1['m']==MON[seas,3])
+  idxdates2 = which(DATE2['m']==MON[seas,1] | DATE2['m']==MON[seas,2] | DATE2['m']==MON[seas,3])
+  
+  mean[idxdates1,] = mean(data2[idxdates2])   ; cat(mean(data2[idxdates2]), "\n"); cat(mean(data1[idxdates1]), "\n")
+  sd[idxdates1,]   = sd(data2[idxdates2])     ; #cat(sd(data2[idxdates2])  , "\n"); cat(sd(data1[idxdates1]), "\n")
+}
+range(mean)
+range(sd)
+DATE = DATE1
+save(mean, sd, DATE, file = "~/Documents/LSCE/SWG/NA_slp_sst/tmean/nat/t2m_mean_sd_1999_2017_nat_16.RData")
+
+## rea
+mean = array(NaN,c(length(data1),1)) # matrice de probas d'occurrence
+sd = array(NaN,c(length(data1),1))
+
+for (seas in 1:4){
+  idxdates1 = which(DATE1['m']==MON[seas,1] | DATE1['m']==MON[seas,2] | DATE1['m']==MON[seas,3])
+  
+  mean[idxdates1,] = mean(data1[idxdates1])   ; cat(mean(data1[idxdates1]), "\n")
+  sd[idxdates1,]   = sd(data1[idxdates1]) 
+}
+range(mean)
+range(sd)
+DATE = DATE1
+save(mean, sd, DATE, file = "~/Documents/LSCE/SWG/NA_slp_sst/tmean/rea/t2m_mean_sd_1999_2017_rea_16.RData")
+
+```
+
+# Intensity
+## How to build `d_intensity` from 1999 to 2017 for 16 models
+```{r eval=FALSE}
+#### load tmean OBS
+load("~/Documents/LSCE/SWG/tmean_48_50_N_01_04_E_1979_2017.RData")
+DATE_OBS = atoms(timeSequence(from="1979-01-01",to="2017-12-31",by='day'))
+
+Obs = tmean[DATE_OBS$Y>=1999 & DATE_OBS$Y<=2017,]
+n = length(Obs)
+
+#### all considered cases
+case_name = c(1:16); case_sel = c(1:16)
+case_name = case_name[case_sel]
+ncase = length(case_name)
+
+list_mean_sd_nat = vector("list", ncase)
+list_mean_sd_rea = vector("list", ncase)
+for (k in 1:ncase){
+  cat(k,'\n')
+  load(paste0("~/Documents/LSCE/SWG/NA_slp_sst/tmean/nat/t2m_mean_sd_1999_2017_nat_", case_sel[k], ".RData"))
+  cat(range(mean),'\n')
+  cat(range(sd),'\n')
+  m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
+  colnames(m) = c("mean", "sd")
+  m[,"mean"] = mean
+  m[,"sd"]   = sd
+  list_mean_sd_nat[[k]] = m
+  
+  cat(k,'\n')
+  load(paste0("~/Documents/LSCE/SWG/NA_slp_sst/tmean/rea/t2m_mean_sd_1999_2017_rea_", case_sel[k], ".RData"))
+  cat(range(mean),'\n')
+  cat(range(sd),'\n')
+  m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
+  colnames(m) = c("mean", "sd")
+  m[,"mean"] = mean
+  m[,"sd"]   = sd
+  list_mean_sd_rea[[k]] = m
+}
+
+#### probability in real world
+p1 = as.data.frame(matrix(NA, nrow = n, ncol = ncase))
+for (l in 1:ncase){
+  for (k in 1:n){
+    p1[k,l] = pnorm(Obs[k], mean = list_mean_sd_rea[[l]][k,"mean"], sd = list_mean_sd_rea[[l]][k,"sd"], lower.tail = T)
+  }
+}
+
+#### when probability in nature world = probability in real world
+p0 = p1
+
+#### i1: intensity of real time conditioned to probability in nature world
+i1 = as.data.frame(matrix(NA, nrow = n, ncol = ncase))
+for (l in 1:ncase){
+  for (k in 1:n){
+    i1[k,l] = qnorm(p0[k,l], mean = list_mean_sd_nat[[l]][k,"mean"], sd = list_mean_sd_nat[[l]][k,"sd"], lower.tail = T)
+  }
+}
+
+#### d_intensity: 1999-2017
+d = Obs - i1
+colnames(d) = case_name
+DATE = as.Date((0:(n-1)), origin = "1999-01-01")
+d$date = DATE
+# save(d, file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+```
+
+## daily `d_intensity` from 1999 to 2017
+```{r eval=FALSE}
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+load("~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+colnames(d) = c(case_name, "statio", "date")
+
+melt_d = melt(d, id.vars = "date")
+colnames(melt_d) = c("date", "case", "d")
+
+## all_models
+p = ggplot(melt_d)
+p = p + geom_line(aes(x=date, y=d, group=case, col=case)) + theme_bw()
+cc <- colorRamps::matlab.like2(n = 16)
+p = p + scale_color_manual(values = cc)
+output = "daily_d_intensity_1999_2017_all_models"
+p = p + labs(title = output,
+             x = "date", y = "difference of intensity (°C)")
+print(p)
+# dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/", output, ".pdf"), width=11, height=7)
+
+## different_models_in_one_figure
+p = ggplot(melt_d)
+p = p + geom_line(aes(x=date, y=d)) + theme_bw()
+p = p + facet_wrap(.~case, nrow = 4)
+output = "daily_d_intensity_1999_2017_different_models"
+p = p + labs(title = output, x = "date", y = "difference of intensity (°C)")
+print(p)
+# dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/", output, ".pdf"), width=11, height=11)
+
+## different_model_in_different_figure
+for (k in 1:16){
+  p = ggplot(melt_d[melt_d$case==case_name[k],])
+  p = p + geom_line(aes(x=date, y=d)) + theme_bw()
+  cc <- colorRamps::matlab.like2(n = 16)
+  p = p + scale_color_manual(values = cc)
+  output = paste0("daily_d_intensity_1999_2017_of_model_", k, "_", case_name[k])
+  p = p + labs(title = output,
+               x = "date", y = "difference of intensity (°C)")
+  print(p)
+  # dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/", output, ".pdf"), width=11, height=7)
+}
+```
+
+
+
+## daily `d_intensity_tmean_summer` for each year from 1999 to 2017
+```{r eval=FALSE}
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+
+for (year in 2003:2003){
+  period_sel = intersect(which(year(d$date)==year) , which(month(d$date)==6|month(d$date)==7|month(d$date)==8))
+  
+  d1 = d[period_sel,]
+  d1 = melt(d1, id.vars = "date")
+  colnames(d1) = c("date", "case", "d")
+  d1$num = rep(1:length(period_sel), ncase)
+  
+  breaks = rep(NA,3)
+  labels = rep(NA,3)
+  for (k in 1:3){
+    breaks[k] = which(month(d1$date)==unique(month(d1$date))[k])[1]
+    labels[k] = as.character(d1$date[breaks[k]])
+  }
+  
+  p = ggplot(d1)
+  p = p + geom_line(aes(x=num, y=d, group=case, col=case)) + theme_bw()
+  cc <- colorRamps::matlab.like2(n = 16)
+  p = p + scale_color_manual(values = cc)
+  p = p + scale_x_continuous(breaks = breaks, labels = labels) 
+  p = p + labs(title = paste0("delta_Intensity_tmean_summer_in_", year),
+               x = "date", y = "difference of intensity (°C)")
+  print(p)
+  # dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/d_intensity_tmean_summer_", year, ".pdf"), width = 7, height=7)
+}
+```
+
+
+## `d_mean` for summer from 1999 to 2017
+### which models to choose ?
+```{r eval=FALSE}
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+
+case_name = c(1:16); case_sel = c(1:16)
+case_name = case_name[case_sel]
+ncase = length(case_name)
+
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+case_name = c(case_name, "statio")
+
+MON=c(12,1:11)
+MON=matrix(MON,nrow=4,ncol=3,byrow=T)
+
+summer = which(month(d$date)==6|month(d$date)==7|month(d$date)==8)
+
+d_mean = as.data.frame(colMeans(d[summer,1:ncase]))
+colnames(d_mean) = "average"
+d_mean$number = 1:16
+d_mean$model = case_name
+d_mean$model = factor(d_mean$model, levels = case_name)
+
+p = ggplot(d_mean) 
+p = p + geom_text(aes(x=number, y=average, label = number)) +  theme_bw()
+p = p + geom_point(aes(x=number, y=average), col = "red", size = 0.5)
+print(p)
+# dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/average_delta_of_intensity_summer_1999-2017.pdf"), width = 9, height=7)
+
+```
+
+### chosen models
+```{r eval=FALSE}
+mods = c(1,2,4,5,7,9,12,16)
+
+p = ggplot(d_mean[mods,]) 
+p = p + geom_point(aes(x=number, y=average)) +  theme_bw()
+p = p + geom_text(aes(x=number, y=average, label=model), hjust = 0, nudge_x = 0.5) 
+print(p)
+# dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/average_delta_of_intensity_summer_1999-2017_best.pdf"), width = 9, height=7)
+
+```
+
+### `d_year_1` for summer from 1999 to 2017
+```{r eval=FALSE, echo=TRUE}
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+case_name = c(case_name, "statio")
+
+MON=c(12,1:11)
+MON=matrix(MON,nrow=4,ncol=3,byrow=T)
+summer = which(month(d$date)==6|month(d$date)==7|month(d$date)==8)
+
+ncase = ncol(d)-1
+
+d = d[summer,]
+d_year = matrix(NA, nrow = (2017-1999+1), ncol = ncase)
+yy = unique(year(d$date))
+for (y in 1:nrow(d_year)){
+  d_year[y,] = colMeans(d[year(d$date)==yy[y],1:ncase])
+}
+d_year = as.data.frame(d_year)
+colnames(d_year) = case_name
+d_year$year = 1999:2017
+
+d_year_1 = melt(d_year, id.vars = "year")
+colnames(d_year_1) = c("year", "case", "intensity")
+
+## annual delta of intensity from 1999 to 2017
+mods = c(1,2,4,5,7,9,12,16)
+d_year_1_mods = d_year_1[d_year_1$case%in%case_name[mods],]
+p = ggplot(d_year_1_mods)
+p = p + geom_line(data = d_year_1_mods[d_year_1_mods$case!="statio",], aes(x=year, y=intensity, col=case)) + theme_bw()
+cc <- colorRamps::matlab.like2(n = length(mods))
+p = p + scale_color_manual(values = cc)
+p = p + geom_line(data = d_year_1_mods[d_year_1_mods$case=="statio",], aes(x = year, y=intensity), col="black")
+output = paste0("annual_delta_of_intensity_summer_1999_2017_best")
+p = p + labs(title = output,
+             x = "date", y = "difference of intensity (°C)")
+print(p)
+# dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/", output, ".pdf"), width = 9, height=7)
+
+```
+
+```{r eval=FALSE}
+## annual delta of intensity from 1999 to 2016 for each case XXX
+for (k in mods){
+  p = ggplot(d_year_1_mods[d_year_1_mods$case == case_name[k],])
+  p = p + geom_line(aes(x=year, y=intensity), col="red") + theme_bw()
+  p = p + geom_line(data = d_year_1_mods[d_year_1_mods$case=="statio",], aes(x = year, y=intensity), col="black")
+  output = paste0("annual_delta_of_intensity_summer_1999_2017_", case_name[k])
+  p = p + labs(title = output,
+               x = "date", y = "difference of intensity (°C)")
+  print(p)
+  # dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Intensity/", output, ".pdf"), width = 7, height=7)
+}
+```
+
+# Criterion with climate indices
+## climate indices: NAO, AO, ENSO 
+Data are extracted from [KNMI Climate Explorer](https://climexp.knmi.nl/selectdailyindex.cgi?id=someone@somewhere)
+
+```{r eval=FALSE}
+DATE = atoms(timeSequence(from="1999-01-01",to="2017-12-31",by='day'))
+
+## NAO
+NAO = read.table(file = "~/Documents/LSCE/RDATA/Climate_indices/icpc_nao_daily.dat.txt")
+colnames(NAO) = c("Y", "m", "d", "value")
+NAO = NAO[NAO$Y>=1999 & NAO$Y<=2017, ]
+data = NAO
+for (k in 1:nrow(DATE)){
+  if (!identical(as.numeric(data[k,1:3]), as.numeric(DATE[k,1:3]))){
+    print(k)
+    nl = matrix(NA, nrow = 1, ncol = 4)
+    colnames(nl) = c("Y", "m", "d", "value")
+    nl[1,1:3] = as.numeric(DATE[k,1:3])
+    
+    data = rbind(data[1:(k-1),], nl, data[k:nrow(data),])
+  }
+}
+NAO_1 = data
+# save(NAO_1, file = "~/Documents/LSCE/RDATA/Climate_indices/NAO_1.RData")
+
+## AO
+AO = read.table(file = "~/Documents/LSCE/RDATA/Climate_indices/icpc_ao_daily.dat.txt")
+colnames(AO) = c("Y", "m", "d", "value")
+AO = AO[AO$Y>=1999 & AO$Y<=2017, ]
+data = AO
+for (k in 1:nrow(DATE)){
+  if (!identical(as.numeric(data[k,1:3]), as.numeric(DATE[k,1:3]))){
+    print(k)
+    nl = matrix(NA, nrow = 1, ncol = 4)
+    colnames(nl) = c("Y", "m", "d", "value")
+    nl[1,1:3] = as.numeric(DATE[k,1:3])
+    
+    data = rbind(data[1:(k-1),], nl, data[k:nrow(data),])
+  }
+}
+AO_1 = data
+# save(AO_1, file = "~/Documents/LSCE/RDATA/Climate_indices/AO_1.RData")
+
+## ENSO
+ENSO = read.table(file = "~/Documents/LSCE/RDATA/Climate_indices/inino34_daily.dat.txt")
+DATE_ENSO = atoms(timeSequence(from="1981-09-01",to="2018-11-01",by='day'))
+ENSO = cbind(DATE_ENSO[,1:3], ENSO[,2])
+colnames(ENSO) = c("Y", "m", "d", "value")
+ENSO = ENSO[ENSO$Y>=1999 & ENSO$Y<=2017, ]
+# save(ENSO, file = "~/Documents/LSCE/RDATA/Climate_indices/ENSO.RData")
+```
+
+## Correlation between `d_intensity` and climate indices
+```{r eval=FALSE}
+#### load climate indices
+load("~/Documents/LSCE/RDATA/Climate_indices/NAO_1.RData")
+load("~/Documents/LSCE/RDATA/Climate_indices/AO_1.RData")
+load("~/Documents/LSCE/RDATA/Climate_indices/ENSO.RData")
+
+#### load d_intensity
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+
+#### chosen models
+mods = c(1,2,4,5,7,9,12,16)
+
+
+cor_tb = as.data.frame(matrix(data = NA, nrow = length(mods), ncol = 3))
+rownames(cor_tb) = c(case_name, "statio")[mods]
+colnames(cor_tb) = c("NAO", "AO", "ENSO")
+
+# winter = which(month(d$date)==6|month(d$date)==7|month(d$date)==8)
+ = which(month(d$date)==12|month(d$date)==1|month(d$date)==2)
+
+method = "spearman"
+method = "spearman"
+for (k in 1:length(mods)){
+  cor_tb[k,1] = cor(NAO_1[winter,4], d[winter,mods[k]], use = "complete.obs", method = method)
+  cor_tb[k,2] = cor( AO_1[winter,4], d[winter,mods[k]], use = "complete.obs", method = method)
+  cor_tb[k,3] = cor( ENSO[winter,4], d[winter,mods[k]], use = "complete.obs", method = method)
+}
+cor_tb$"NAO+ENSO" = abs(cor_tb$NAO) + abs(cor_tb$ENSO)
+cor_tb$"AO+ENSO" = abs(cor_tb$AO) + abs(cor_tb$ENSO)
+
+print(cor_tb)
+# save(cor_tb, file = paste0("~/Documents/LSCE/SWG/NA_slp_sst/cor_tb_summer_", method, ".RData"))
+
+```
+
+# Anomaly
+```{r eval=FALSE}
+#### Anomaly ####
+var = "slp"
+
+load(file = paste0("~/Documents/LSCE/SWG/NA_slp_sst/", var, "_anomaly.RData"))
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+
+MON=c(12,1:11)
+MON=matrix(MON,nrow=4,ncol=3,byrow=T)
+SEAS=c('DJF','MAM','JJA','SON')
+season=c('Winter','Spring','Summer','Fall')
+
+mods = c(1,2,4,5,7,9,12)
+for (model in mods){
+  tp = which(d[,model] - d[,16]>0); length(tp)
+  tn = which(d[,model] - d[,16]<0); length(tn)
+  
+  data_anomaly = data_anomaly[,,DATE$Y>=1999 & DATE$Y<=2017]
+  DATE = DATE[DATE$Y>=1999 & DATE$Y<=2017,]
+  
+  for (seas in c(3)){
+    idxdates = which(DATE['m']==MON[seas,1] | DATE['m']==MON[seas,2] | DATE['m']==MON[seas,3])
+    tp_sea = intersect(tp, idxdates)
+    data = apply(data_anomaly[,,tp_sea], 1:2, mean)
+    colnames(data) = LAT; rownames(data) = LON
+    data = data[,rev(seq_along(LAT))]
+    
+    output = paste0(var, "_positive_1999-2017_", season[seas], "_model_", model, "_", case_name[model])
+    image.plot(data, x = LON, y = rev(LAT), xlab = "Lon", ylab = "Lat", 
+               main = output)
+    world_map = map('world', plot = FALSE)
+    lines(world_map, col = "white")
+    contour(x = LON, y = rev(LAT), z = data, add = TRUE)
+    
+    # dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Anomaly/", output,".pdf"), width = 11, height = 5)
+    
+    
+    tn_sea = intersect(tn, idxdates)
+    data = apply(data_anomaly[,,tn_sea], 1:2, mean)
+    colnames(data) = LAT; rownames(data) = LON
+    data = data[,rev(seq_along(LAT))]
+    
+    output = paste0(var, "_negative_1999-2017_", season[seas], "_model_", model, "_", case_name[model])
+    image.plot(data, x = LON, y = rev(LAT), xlab = "Lon", ylab = "Lat", 
+               main = output)
+    world_map = map('world', plot = FALSE)
+    lines(world_map, col = "white")
+    contour(x = LON, y = rev(LAT), z = data, add = TRUE)
+    
+    # dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/Anomaly/", output,".pdf"), width = 11, height = 5)
+  }
+}
+```
+
+# Dim and theta
+```{r eval=FALSE}
+#### dim and theta ####
+var = "slp"
+if (var == "slp"){
+  load("~/Documents/LSCE/Dynamic System/msl_1979-2018_NA_1.5x1.5_dim.RData")
+  load("~/Documents/LSCE/Dynamic System/msl_1979-2018_NA_1.5x1.5_theta.RData")
+  plot(dim, theta)
+}else if (var == "z500"){
+  load("~/Documents/LSCE/Dynamic System/z500_1979-2018_NA_1.5x1.5_dim.RData")
+  load("~/Documents/LSCE/Dynamic System/z500_1979-2018_NA_1.5x1.5_theta.RData")
+  plot(dim, theta)
+}else if (var == "sst"){
+  load("~/Documents/LSCE/Dynamic System/sst_1979-2018_NA_1.5x1.5_dim.RData")
+  load("~/Documents/LSCE/Dynamic System/sst_1979-2018_NA_1.5x1.5_theta.RData")
+  plot(dim, theta)
+}
+
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/case_name.RData")
+
+DATE = atoms(timeSequence(from="1979-01-01",to="2018-07-31",by='day'))
+dim   = dim[DATE$Y>=1999 & DATE$Y<=2017]
+theta = theta[DATE$Y>=1999 & DATE$Y<=2017]
+DATE = DATE[DATE$Y>=1999 & DATE$Y<=2017,]
+
+data = as.data.frame(cbind(dim, theta))
+
+load(file = "~/Documents/LSCE/SWG/NA_slp_sst/d_intensity.RData")
+
+MON=c(12,1:11)
+MON=matrix(MON,nrow=4,ncol=3,byrow=T)
+SEAS=c('DJF','MAM','JJA','SON')
+season=c('Winter','Spring','Summer','Fall')
+
+mods = c(1,2,4,5,7,9,12)
+for (model in mods){
+  tp = which(d[,model] - d[,16]>0); length(tp)
+  tn = which(d[,model] - d[,16]<0); length(tn)
+  data$type = NA
+  for (seas in 1:4){
+    
+    idxdates = which(DATE['m']==MON[seas,1] | DATE['m']==MON[seas,2] | DATE['m']==MON[seas,3])
+    
+    tp_sea = intersect(tp, idxdates)
+    tn_sea = intersect(tn, idxdates)
+    
+    data$type[tp_sea] = "p"
+    data$type[tn_sea] = "n"
+    
+    data_sea = data[idxdates,]
+    
+    library(ggplot2)
+    output = paste0("dim_theta_1999-2017_by_", var, "_in_", season[seas], "_for_model_", model, "_", case_name[model])
+    p = ggplot(data_sea) + geom_point(aes(x = dim, y = theta, col = type)) + theme_bw()
+    p = p + labs(title = output)
+    print(p)
+    # dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/NA_slp_sst/Image/SysDyn/", output, ".pdf"), width = 7, height = 7)
+  }
+  
+}
+```
+

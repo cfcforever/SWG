@@ -1,0 +1,271 @@
+---
+title: "cb_table"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(xtable)
+```
+
+\newpage
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rcccc}
+  \hline
+ & slp\_PC & slp\_SD & sst\_PC & sst\_SD \\
+  \hline
+1 & X &  &  &  \\\hline 
+  2 &  & X &  &  \\\hline 
+  3 &  &  & X &  \\\hline 
+  4 &  &  &  & X \\\hline 
+  5 & X & X &  &  \\\hline 
+  6 & X &  & X &  \\\hline 
+  7 & X &  &  & X \\\hline 
+  8 &  & X & X &  \\\hline 
+  9 &  & X &  & X \\\hline 
+  10 &  &  & X & X \\\hline 
+  11 & X & X & X &  \\\hline 
+  12 & X & X &  & X \\\hline 
+  13 & X &  & X & X \\\hline 
+  14 &  & X & X & X \\\hline 
+  15 & X & X & X & X \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\newpage
+\pagenumbering{gobble}
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrr}
+  \hline
+ & NAO & AO & ENSO & NAO+ENSO & AO+ENSO \\ 
+  \hline
+slp\_PC & -0.08 & -0.20 & -0.05 & 0.14 & 0.25 \\ 
+  slp\_SD & -0.19 & -0.09 & -0.02 & 0.21 & 0.11 \\ 
+  sst\_SD & -0.33 & -0.26 & 0.03 & 0.36 & 0.29 \\ 
+  slp\_PC+slp\_SD & -0.09 & -0.16 & -0.04 & 0.14 & 0.20 \\ 
+  slp\_PC+sst\_SD & -0.22 & -0.27 & 0.11 & 0.33 & 0.38 \\ 
+  slp\_SD+sst\_SD & -0.22 & -0.14 & 0.03 & 0.25 & 0.16 \\ 
+  slp\_PC+slp\_SD+sst\_SD & -0.21 & -0.23 & 0.11 & 0.32 & 0.34 \\ 
+  statio & -0.40 & -0.28 & -0.01 & 0.42 & 0.29 \\ 
+   \hline
+\end{tabular}
+\caption{Winter}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrr}
+  \hline
+ & NAO & AO & ENSO & NAO+ENSO & AO+ENSO \\ 
+  \hline
+slp\_PC & 0.36 & 0.23 & 0.03 & 0.38 & 0.26 \\ 
+  slp\_SD & -0.28 & -0.25 & -0.01 & 0.29 & 0.26 \\ 
+  sst\_SD & 0.05 & 0.06 & 0.07 & 0.12 & 0.13 \\ 
+  slp\_PC+slp\_SD & 0.25 & 0.31 & 0.03 & 0.28 & 0.35 \\ 
+  slp\_PC+sst\_SD & 0.38 & 0.21 & 0.05 & 0.42 & 0.26 \\ 
+  slp\_SD+sst\_SD & -0.16 & -0.22 & 0.06 & 0.22 & 0.28 \\ 
+  slp\_PC+slp\_SD+sst\_SD & 0.22 & 0.11 & 0.06 & 0.28 & 0.17 \\ 
+  statio & -0.10 & 0.12 & 0.06 & 0.17 & 0.18 \\ 
+   \hline
+\end{tabular}
+\caption{Spring}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrr}
+  \hline
+ & NAO & AO & ENSO & NAO+ENSO & AO+ENSO \\ 
+  \hline
+slp\_PC & -0.62 & -0.34 & 0.01 & 0.63 & 0.35 \\ 
+  slp\_SD & -0.09 & -0.04 & -0.03 & 0.12 & 0.07 \\ 
+  sst\_SD & -0.02 & 0.10 & -0.15 & 0.17 & 0.25 \\ 
+  slp\_PC+slp\_SD & -0.57 & -0.31 & -0.03 & 0.60 & 0.34 \\ 
+  slp\_PC+sst\_SD & -0.26 & -0.09 & -0.02 & 0.28 & 0.11 \\ 
+  slp\_SD+sst\_SD & -0.04 & 0.06 & -0.13 & 0.17 & 0.19 \\ 
+  slp\_PC+slp\_SD+sst\_SD & -0.18 & -0.02 & -0.07 & 0.25 & 0.09 \\ 
+  statio & -0.07 & 0.03 & -0.04 & 0.11 & 0.07 \\ 
+   \hline
+\end{tabular}
+\caption{Summer}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrr}
+  \hline
+ & NAO & AO & ENSO & NAO+ENSO & AO+ENSO \\ 
+  \hline
+slp\_PC & -0.04 & -0.14 & 0.06 & 0.10 & 0.20 \\ 
+  slp\_SD & 0.05 & -0.04 & 0.08 & 0.13 & 0.13 \\ 
+  sst\_SD & 0.10 & 0.04 & -0.05 & 0.14 & 0.08 \\ 
+  slp\_PC+slp\_SD & -0.28 & -0.32 & 0.04 & 0.31 & 0.36 \\ 
+  slp\_PC+sst\_SD & 0.01 & -0.02 & -0.01 & 0.02 & 0.03 \\ 
+  slp\_SD+sst\_SD & 0.11 & 0.05 & 0.02 & 0.13 & 0.07 \\ 
+  slp\_PC+slp\_SD+sst\_SD & -0.10 & -0.12 & 0.00 & 0.11 & 0.12 \\ 
+  statio & 0.04 & -0.09 & -0.05 & 0.09 & 0.14 \\ 
+   \hline
+\end{tabular}
+\caption{Autumn}
+\end{table}
+
+
+\newpage
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{rllllll}
+  \hline
+1 & slp\_PC &  &  &  &  &  \\
+  2 & slp\_SysDyn &  &  &  &  &  \\
+  3 & z500\_PC &  &  &  &  &  \\
+  4 & z500\_SysDyn &  &  &  &  &  \\
+  5 & sst\_PC &  &  &  &  &  \\
+  6 & sst\_SysDyn &  &  &  &  &  \\
+  7 & slp\_PC & slp\_SysDyn &  &  &  &  \\
+  8 & slp\_PC & z500\_PC &  &  &  &  \\
+  9 & slp\_PC & z500\_SysDyn &  &  &  &  \\
+  10 & slp\_PC & sst\_PC &  &  &  &  \\ 
+  11 & slp\_PC & sst\_SysDyn &  &  &  &  \\ 
+  12 & slp\_SysDyn & z500\_PC &  &  &  &  \\ 
+  13 & slp\_SysDyn & z500\_SysDyn &  &  &  &  \\ 
+  14 & slp\_SysDyn & sst\_PC &  &  &  &  \\ 
+  15 & slp\_SysDyn & sst\_SysDyn &  &  &  &  \\ 
+  16 & z500\_PC & z500\_SysDyn &  &  &  &  \\ 
+  17 & z500\_PC & sst\_PC &  &  &  &  \\ 
+  18 & z500\_PC & sst\_SysDyn &  &  &  &  \\ 
+  19 & z500\_SysDyn & sst\_PC &  &  &  &  \\ 
+  20 & z500\_SysDyn & sst\_SysDyn &  &  &  &  \\ 
+  21 & sst\_PC & sst\_SysDyn &  &  &  &  \\ 
+  22 & slp\_PC & slp\_SysDyn & z500\_PC &  &  &  \\ 
+  23 & slp\_PC & slp\_SysDyn & z500\_SysDyn &  &  &  \\ 
+  24 & slp\_PC & slp\_SysDyn & sst\_PC &  &  &  \\ 
+  25 & slp\_PC & slp\_SysDyn & sst\_SysDyn &  &  &  \\ 
+  26 & slp\_PC & z500\_PC & z500\_SysDyn &  &  &  \\ 
+  27 & slp\_PC & z500\_PC & sst\_PC &  &  &  \\ 
+  28 & slp\_PC & z500\_PC & sst\_SysDyn &  &  &  \\ 
+  29 & slp\_PC & z500\_SysDyn & sst\_PC &  &  &  \\ 
+  30 & slp\_PC & z500\_SysDyn & sst\_SysDyn &  &  &  \\ 
+  31 & slp\_PC & sst\_PC & sst\_SysDyn &  &  &  \\ 
+  32 & slp\_SysDyn & z500\_PC & z500\_SysDyn &  &  &  \\ 
+  33 & slp\_SysDyn & z500\_PC & sst\_PC &  &  &  \\ 
+  34 & slp\_SysDyn & z500\_PC & sst\_SysDyn &  &  &  \\ 
+  35 & slp\_SysDyn & z500\_SysDyn & sst\_PC &  &  &  \\ 
+  36 & slp\_SysDyn & z500\_SysDyn & sst\_SysDyn &  &  &  \\ 
+  37 & slp\_SysDyn & sst\_PC & sst\_SysDyn &  &  &  \\ 
+  38 & z500\_PC & z500\_SysDyn & sst\_PC &  &  &  \\ 
+  39 & z500\_PC & z500\_SysDyn & sst\_SysDyn &  &  &  \\ 
+  40 & z500\_PC & sst\_PC & sst\_SysDyn &  &  &  \\ 
+  41 & z500\_SysDyn & sst\_PC & sst\_SysDyn &  &  &  \\ 
+  42 & slp\_PC & slp\_SysDyn & z500\_PC & z500\_SysDyn &  &  \\ 
+  43 & slp\_PC & slp\_SysDyn & z500\_PC & sst\_PC &  &  \\ 
+  44 & slp\_PC & slp\_SysDyn & z500\_PC & sst\_SysDyn &  &  \\ 
+  45 & slp\_PC & slp\_SysDyn & z500\_SysDyn & sst\_PC &  &  \\ 
+  46 & slp\_PC & slp\_SysDyn & z500\_SysDyn & sst\_SysDyn &  &  \\ 
+  47 & slp\_PC & slp\_SysDyn & sst\_PC & sst\_SysDyn &  &  \\ 
+  48 & slp\_PC & z500\_PC & z500\_SysDyn & sst\_PC &  &  \\ 
+  49 & slp\_PC & z500\_PC & z500\_SysDyn & sst\_SysDyn &  &  \\ 
+  50 & slp\_PC & z500\_PC & sst\_PC & sst\_SysDyn &  &  \\ 
+  51 & slp\_PC & z500\_SysDyn & sst\_PC & sst\_SysDyn &  &  \\ 
+  52 & slp\_SysDyn & z500\_PC & z500\_SysDyn & sst\_PC &  &  \\ 
+  53 & slp\_SysDyn & z500\_PC & z500\_SysDyn & sst\_SysDyn &  &  \\ 
+  54 & slp\_SysDyn & z500\_PC & sst\_PC & sst\_SysDyn &  &  \\ 
+  55 & slp\_SysDyn & z500\_SysDyn & sst\_PC & sst\_SysDyn &  &  \\ 
+  56 & z500\_PC & z500\_SysDyn & sst\_PC & sst\_SysDyn &  &  \\ 
+  57 & slp\_PC & slp\_SysDyn & z500\_PC & z500\_SysDyn & sst\_PC &  \\ 
+  58 & slp\_PC & slp\_SysDyn & z500\_PC & z500\_SysDyn & sst\_SysDyn &  \\ 
+  59 & slp\_PC & slp\_SysDyn & z500\_PC & sst\_PC & sst\_SysDyn &  \\ 
+  60 & slp\_PC & slp\_SysDyn & z500\_SysDyn & sst\_PC & sst\_SysDyn &  \\ 
+  61 & slp\_PC & z500\_PC & z500\_SysDyn & sst\_PC & sst\_SysDyn &  \\ 
+  62 & slp\_SysDyn & z500\_PC & z500\_SysDyn & sst\_PC & sst\_SysDyn &  \\ 
+  63 & slp\_PC & slp\_SysDyn & z500\_PC & z500\_SysDyn & sst\_PC & sst\_SysDyn \\\hline 
+\end{tabular}
+\end{table}
+
+
+\newpage
+\pagenumbering{gobble}
+% latex table generated in R 3.5.1 by xtable 1.8-3 package
+% Fri Oct 26 10:22:44 2018
+\begin{table}[ht]
+\centering
+\footnotesize
+\begin{tabular}{rrl}
+  \hline
+ & BIC & model \\ 
+  \hline
+61 & 17965.77 & slp\_PC+z500\_PC+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  48 & 17981.29 & slp\_PC+z500\_PC+z500\_SysDyn+sst\_PC \\\hline 
+  50 & 17981.88 & slp\_PC+z500\_PC+sst\_PC+sst\_SysDyn \\\hline 
+  63 & 17987.00 & slp\_PC+slp\_SysDyn+z500\_PC+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  26 & 17993.07 & slp\_PC+z500\_PC+z500\_SysDyn \\\hline 
+  49 & 17994.67 & slp\_PC+z500\_PC+z500\_SysDyn+sst\_SysDyn \\\hline 
+  27 & 18000.28 & slp\_PC+z500\_PC+sst\_PC \\\hline 
+  57 & 18001.27 & slp\_PC+slp\_SysDyn+z500\_PC+z500\_SysDyn+sst\_PC \\\hline 
+  42 & 18010.60 & slp\_PC+slp\_SysDyn+z500\_PC+z500\_SysDyn \\\hline 
+  59 & 18013.05 & slp\_PC+slp\_SysDyn+z500\_PC+sst\_PC+sst\_SysDyn \\\hline 
+  58 & 18015.35 & slp\_PC+slp\_SysDyn+z500\_PC+z500\_SysDyn+sst\_SysDyn \\\hline 
+  28 & 18016.80 & slp\_PC+z500\_PC+sst\_SysDyn \\\hline 
+  8 & 18022.55 & slp\_PC+z500\_PC \\\hline 
+  43 & 18030.48 & slp\_PC+slp\_SysDyn+z500\_PC+sst\_PC \\\hline 
+  44 & 18048.46 & slp\_PC+slp\_SysDyn+z500\_PC+sst\_SysDyn \\\hline 
+  22 & 18053.28 & slp\_PC+slp\_SysDyn+z500\_PC \\\hline 
+  51 & 18142.14 & slp\_PC+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  29 & 18162.87 & slp\_PC+z500\_SysDyn+sst\_PC \\\hline 
+  31 & 18163.36 & slp\_PC+sst\_PC+sst\_SysDyn \\\hline 
+  60 & 18164.45 & slp\_PC+slp\_SysDyn+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  30 & 18182.37 & slp\_PC+z500\_SysDyn+sst\_SysDyn \\\hline 
+  45 & 18183.91 & slp\_PC+slp\_SysDyn+z500\_SysDyn+sst\_PC \\\hline 
+  10 & 18185.06 & slp\_PC+sst\_PC \\\hline 
+  9 & 18185.57 & slp\_PC+z500\_SysDyn \\\hline 
+  47 & 18192.71 & slp\_PC+slp\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  23 & 18202.06 & slp\_PC+slp\_SysDyn+z500\_SysDyn \\\hline 
+  46 & 18202.29 & slp\_PC+slp\_SysDyn+z500\_SysDyn+sst\_SysDyn \\\hline 
+  11 & 18203.89 & slp\_PC+sst\_SysDyn \\\hline 
+  1 & 18210.08 & slp\_PC \\\hline 
+  24 & 18212.89 & slp\_PC+slp\_SysDyn+sst\_PC \\\hline 
+  25 & 18233.75 & slp\_PC+slp\_SysDyn+sst\_SysDyn \\\hline 
+  7 & 18238.42 & slp\_PC+slp\_SysDyn \\\hline 
+  56 & 18340.41 & z500\_PC+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  40 & 18341.61 & z500\_PC+sst\_PC+sst\_SysDyn \\\hline 
+  54 & 18369.88 & slp\_SysDyn+z500\_PC+sst\_PC+sst\_SysDyn \\\hline 
+  62 & 18370.97 & slp\_SysDyn+z500\_PC+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  38 & 18375.75 & z500\_PC+z500\_SysDyn+sst\_PC \\\hline 
+  17 & 18378.02 & z500\_PC+sst\_PC \\\hline 
+  33 & 18401.37 & slp\_SysDyn+z500\_PC+sst\_PC \\\hline 
+  52 & 18402.55 & slp\_SysDyn+z500\_PC+z500\_SysDyn+sst\_PC \\\hline 
+  39 & 18418.47 & z500\_PC+z500\_SysDyn+sst\_SysDyn \\\hline 
+  18 & 18423.50 & z500\_PC+sst\_SysDyn \\\hline 
+  16 & 18437.24 & z500\_PC+z500\_SysDyn \\\hline 
+  53 & 18446.45 & slp\_SysDyn+z500\_PC+z500\_SysDyn+sst\_SysDyn \\\hline 
+  3 & 18448.80 & z500\_PC \\\hline 
+  34 & 18449.43 & slp\_SysDyn+z500\_PC+sst\_SysDyn \\\hline 
+  32 & 18460.39 & slp\_SysDyn+z500\_PC+z500\_SysDyn \\\hline 
+  12 & 18470.59 & slp\_SysDyn+z500\_PC \\\hline 
+  55 & 19380.75 & slp\_SysDyn+z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  37 & 19444.60 & slp\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  35 & 19453.30 & slp\_SysDyn+z500\_SysDyn+sst\_PC \\\hline 
+  41 & 19457.09 & z500\_SysDyn+sst\_PC+sst\_SysDyn \\\hline 
+  14 & 19510.50 & slp\_SysDyn+sst\_PC \\\hline 
+  36 & 19511.65 & slp\_SysDyn+z500\_SysDyn+sst\_SysDyn \\\hline 
+  15 & 19541.30 & slp\_SysDyn+sst\_SysDyn \\\hline 
+  19 & 19548.27 & z500\_SysDyn+sst\_PC \\\hline 
+  13 & 19557.28 & slp\_SysDyn+z500\_SysDyn \\\hline 
+  2 & 19581.46 & slp\_SysDyn \\\hline 
+  20 & 19627.63 & z500\_SysDyn+sst\_SysDyn \\\hline 
+  21 & 19636.14 & sst\_PC+sst\_SysDyn \\\hline 
+  4 & 19690.74 & z500\_SysDyn \\\hline 
+  5 & 19728.18 & sst\_PC \\\hline 
+  6 & 19749.81 & sst\_SysDyn \\\hline 
+  64 & 21120.50 & statio \\ 
+   \hline
+\end{tabular}
+\end{table}
+
