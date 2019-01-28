@@ -8,37 +8,37 @@
   library(stats4)
   library(VGAM)
   
-  library(CDFt)
+  # library(CDFt)
   
   library(ggplot2)
   library(reshape2)
   
-  library(evd)
+  # library(evd)
   
   library(fields)
   
   library(lubridate)
   
-  library(fitdistrplus)
+  # library(fitdistrplus)
   
-  library(xtable)
+  # library(xtable)
   
   library(RColorBrewer)
   library(colorRamps)
   
-  library(factoextra)  
+  # library(factoextra)  
   
   # install.packages("devtools")  
   # library(jcolors)
   
-  library(animation)
+  # library(animation)
   
   # anomaly_map
   library(maps)
   library(directlabels)
   
   # multiplot
-  library(cowplot)
+  # library(cowplot)
   
   # conditional gev
   library(extRemes)
@@ -48,8 +48,8 @@
 }
 
 # load function -----------------------------------------------------------
-source("function/fun_save_pdf.R")
-source("function/fun_limits.R")
+# source("function/fun_save_pdf.R")
+# source("function/fun_limits.R")
 
 source("function/fun_estimation_t2m.R")
 source("function/fun_estimation_t2m.R")
