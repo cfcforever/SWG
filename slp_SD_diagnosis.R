@@ -412,14 +412,18 @@ if (cas == 1){
   load(file = paste0("/Volumes/Data-ExFAT/LSCE/SWG/NA_slp_sst/", var, "_anomaly_1979_1998.RData"))
   cas = "2_1979_1998"
 }else if(cas == 3){
-  load(file = paste0("/Volumes/Data-ExFAT/LSCE/SWG/NA_slp_sst/", var, "_anomaly_1999_2017.RData"))
+  load(file = paste0("/Volumes/Data-ExFAT/DATA/RData/Anomaly/", var, "_anomaly_1999_2017.RData"))
   cas = "3_1999_2017"
 }
+
+LON = data_anomaly$lon
+LAT = data_anomaly$lat
+DATE = data_anomaly$date
+data_anomaly = data_anomaly$data
 
 data_anomaly = data_anomaly[,,DATE$Y>=1999 & DATE$Y<=2017]
 DATE = DATE[DATE$Y>=1999 & DATE$Y<=2017,]
 
-list.anomaly.maps = vector("list", 3)
 for (city in city.names){
   load(file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/d_intensity.RData"))
   dI = d
@@ -428,7 +432,6 @@ for (city in city.names){
     t_sup = which(dI[,"slp_SD"] - dI[,"statio"]>0); length(t_sup)
     t_inf = which(dI[,"slp_SD"] - dI[,"statio"]<0); length(t_inf)
     
-    # list.data = vector("list", 2)
     for (seas in c(1,3)){
       # seas = 1
       idxdates = which(DATE['m']==MON[seas,1] | DATE['m']==MON[seas,2] | DATE['m']==MON[seas,3])
@@ -442,7 +445,7 @@ for (city in city.names){
         
         output = paste0(var, "_sup_1999-2017_", season[seas], "_slp_SD_", cas)
         dat = melt(data, varnames = c("long", "lat"))
-        plot_worldmap(data = dat, val.limits = c(-150, 150))
+        plot_worldmap(data = dat, val.limits = c(-100, 100))
         dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/", output,".pdf"), width = 11, height = 5)
       }
       
@@ -456,7 +459,7 @@ for (city in city.names){
         
         output = paste0(var, "_inf_1999-2017_", season[seas], "_slp_SD_", cas)
         dat = melt(data, varnames = c("long", "lat"))
-        plot_worldmap(data = dat, val.limits = c(-150, 150))
+        plot_worldmap(data = dat, val.limits = c(-100, 100))
         dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/", output,".pdf"), width = 11, height = 5)
       }
     }
