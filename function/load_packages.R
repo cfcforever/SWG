@@ -8,6 +8,7 @@
   library(stats4)
   library(VGAM)
   
+  # CramerVonMisesTwoSamples
   # library(CDFt)
   
   library(ggplot2)
