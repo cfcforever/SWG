@@ -2,7 +2,7 @@
 Title: Event Attribution of Climate Changes with Dynamically driven-Stochastic Weather Generators
 
 ## How to run the code
-Pleas download 
+Please download and RUN `slp_SD_diagnosis.R`
 - [slp_SD_diagnosis.R](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)
 - dossier [**function**](https://github.com/cfcforever/SWG/tree/master/function)
 - dossier [**DATA**](https://github.com/cfcforever/SWG/tree/master/DATA)
