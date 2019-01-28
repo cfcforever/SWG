@@ -8,6 +8,9 @@ We use **tmean** as example (see [slp_SD_diagnosis](https://github.com/cfcforeve
 3. to simulate the mean and sd conditional to the dynamical system
 4. to generate the simulations by using the simulated mean and sd
 
+5. to repeat step 2-4 to generate the simualtions of non-conditional model
+> We comapre the conditional model to the non-conditional model
+
 ## How to use conditaional SWG for event attribution of climate changes
 1. FAR
 2. Changes of intensity
