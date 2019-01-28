@@ -4,8 +4,8 @@ Title: Event Attribution of Climate Changes with Dynamically driven-Stochastic W
 ## How to run the code
 Pleas download 
 - [slp_SD_diagnosis.R](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)
-- dossier **function**
-- dossier **DATA**
+- dossier [**function**](https://github.com/cfcforever/SWG/tree/master/function)
+- dossier [**DATA**](https://github.com/cfcforever/SWG/tree/master/DATA)
 
 ## How to construct conditional SWG
 We use **tmean** as example (see [slp_SD_diagnosis](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)), 
