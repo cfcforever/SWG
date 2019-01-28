@@ -38,3 +38,4 @@ rsconnect/
 
 # directories to ignore
 output/
+SWG/
