@@ -1,7 +1,8 @@
 # SWG
+Title: Event Attribution of Climate Changes with Dynamically driven-Stochastic Weather Generators
 
 ## How to construct conditional SWG
-We use **tmean** as example (see [slp_SD_diagnosis](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R))
+We use **tmean** as example (see [slp_SD_diagnosis](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)), 
 1. to select the predictors (e.g., using the dynamical system on sea level pressure over the Northern Atlantic)
 2. to estimate the parameters for mean and sd conditional to the dynamical system
 3. to simulate the mean and sd conditional to the dynamical system
