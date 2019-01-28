@@ -33,7 +33,7 @@ if (!dir.exists("output")){
 ####
 
 
-# Create Directoires for output -------------------------------------------
+# Create directoires for output -------------------------------------------
 if (!dir.exists(paste0("output/", city))){
   dir.create(paste0("output/", city))
 }
