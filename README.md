@@ -1,6 +1,20 @@
 # SWG
 
-## Coordinations
+## How to construct conditional SWG
+We use **tmean** as example (see [slp_SD_diagnosis](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R))
+1. to select the predictors (e.g., using the dynamical system on sea level pressure over the Northern Atlantic)
+2. to estimate the parameters for mean and sd conditional to the dynamical system
+3. to simulate the mean and sd conditional to the dynamical system
+4. to generate the simulations by using the simulated mean and sd
+
+## How to use conditaional SWG for event attribution of climate changes
+1. FAR
+2. Changes of intensity
+3. Anomaly maps
+
+
+## To complete
+### Coordinations
 
 | Name                      | Domain                |
 | ------------------------- |:---------------------:|
@@ -9,10 +23,9 @@
 | Europe                    | [35N, 60N]x[10W, 25E] |
 
 
-## Function
+### Function
 - [fun_estimation](https://github.com/cfcforever/SWG/blob/master/function/fun_estimation_t2m.R)
 - [fun_simulation](https://github.com/cfcforever/SWG/blob/master/function/fun_simulation_t2m.R)
 - [plot_worldmap](https://github.com/cfcforever/SWG/blob/master/function/plot_worldmap.R)
 
-## Anomaly 
-![vent géostrophique](https://fr.cdn.v5.futura-sciences.com/buildsv6/images/largeoriginal/a/f/1/af18361c78_50084207_vent-geostrophique.jpg)
+### Anomaly 
