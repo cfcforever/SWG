@@ -18,36 +18,52 @@ source("function/load_packages.R")
 
 
 #### load slp SysDyn ####
-if (FALSE){
+if (!dir.exists("output")){
+  dir.create("output")
+  dir.create("output/predictor")
   for (seas in 1:4){
-    load(paste0("~/Documents/LSCE/SWG/NA_1.5/pca/msl_",SEAS[seas],"_SysDyn.RData"))
+    load(paste0("DATA/msl_",SEAS[seas],"_SysDyn.RData"))
     PCS = apply(SysDyn, MARGIN = 2, FUN = function(x){scale(x)})
     print(c(colMeans(PCS), apply(PCS, 2, FUN = sd)))
     colnames(PCS) = paste0("PC", 1:ncol(PCS))
     PCS = as.data.frame(PCS)
-    # save(PCS, file = paste0("~/Documents/LSCE/SWG/slp_PC_diagnosis/0PC/predictor_",SEAS[seas],"_1.RData"))
-    save(PCS, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/predictor/predictor_",SEAS[seas],"_1.RData"))
+    save(PCS, file = paste0("output/predictor/predictor_",SEAS[seas],"_1.RData"))
   }
 }
 ####
 
 
+# Create Directoires for output -------------------------------------------
+if (!dir.exists(paste0("output/", city))){
+  dir.create(paste0("output/", city))
+}
+if (!dir.exists(paste0("output/", city, "/SIMU"))){
+  dir.create(path = paste0("output/", city, "/SIMU"))
+  dir.create(path = paste0("output/", city, "/SIMU/nat"))
+  dir.create(path = paste0("output/", city, "/SIMU/rea"))
+}
+if (!dir.exists(paste0("output/", city, "/Image"))){
+  dir.create(path = paste0("output/", city, "/Image"))
+}
+
+
 #### Estimation ####
 source("function/fun_estimation_t2m.R")
 
+
 ## 1979 - 1998
-fun_estimation(predictor = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/predictor/predictor_'),
+fun_estimation(predictor = paste0('output/predictor/predictor_'),
                NUM = 1,
-               input.tmean = paste0('~/Documents/LSCE/SWG/data/tmean_', city, '_1979_2017.RData'),
-               output.name = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/SWG_ERAI_ESD_tmean_'),
+               input.tmean = paste0('DATA/tmean_', city, '_1979_2017.RData'),
+               output.name = paste0('output/', city, '/SWG_ERAI_ESD_tmean_'),
                year.begin = 1979,
                year.end = 1998)
 
 ## 1999 - 2017
-fun_estimation(predictor = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/predictor/predictor_'),
+fun_estimation(predictor = paste0('output/predictor/predictor_'),
                NUM = 1,
-               input.tmean = paste0('~/Documents/LSCE/SWG/data/tmean_', city, '_1979_2017.RData'),
-               output.name = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/SWG_ERAI_ESD_tmean_'),
+               input.tmean = paste0('DATA/tmean_', city, '_1979_2017.RData'),
+               output.name = paste0('output/', city, '/SWG_ERAI_ESD_tmean_'),
                year.begin = 1999,
                year.end = 2017)
 ####
@@ -57,30 +73,26 @@ fun_estimation(predictor = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/predict
 source("function/fun_simulation_t2m.R")
 
 ## 1979 - 1998
-for (k in 1:1){
-  fun_simulation(predictor = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/predictor/predictor_'),
-                 parameter = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/SWG_ERAI_ESD_tmean_'),
-                 NUM = k, 
-                 type = "nat",
-                 output = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/'), 
-                 y1 = 1999, y2 = 2017,
-                 year.begin = 1979, year.end = 1998)
-}
+fun_simulation(predictor = paste0('output/predictor/predictor_'),
+               parameter = paste0('output/', city, '/SWG_ERAI_ESD_tmean_'),
+               NUM = 1, 
+               type = "nat",
+               output = paste0('output/', city, '/'), 
+               y1 = 1999, y2 = 2017,
+               year.begin = 1979, year.end = 1998)
 
 ## 1999 - 2017
-for (k in 1:1){
-  fun_simulation(predictor = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/predictor/predictor_'),
-                 parameter = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/SWG_ERAI_ESD_tmean_'),
-                 NUM = k, 
-                 type = "rea",
-                 output = paste0('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/'), 
-                 y1 = 1999, y2 = 2017,
-                 year.begin = 1999, year.end = 2017)
-}
+fun_simulation(predictor = paste0('output/predictor/predictor_'),
+               parameter = paste0('output/', city, '/SWG_ERAI_ESD_tmean_'),
+               NUM = 1, 
+               type = "rea",
+               output = paste0('output/', city, '/'), 
+               y1 = 1999, y2 = 2017,
+               year.begin = 1999, year.end = 2017)
 ####
 
 #### create stationnary model: DON'T RUN every time !!! ####
-load(paste0("~/Documents/LSCE/SWG/data/tmean_", city, "_1979_2017.RData"))
+load(paste0("DATA/tmean_", city, "_1979_2017.RData"))
 DATE_OBS = atoms(timeSequence(from="1979-01-01",to="2017-12-31",by='day'))
 
 data1 = tmean[DATE_OBS$Y>=1999 & DATE_OBS$Y<=2017,]
@@ -103,7 +115,7 @@ for (seas in 1:4){
 range(mean)
 range(sd)
 DATE = DATE1
-save(mean, sd, DATE, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_nat_0.RData"))
+save(mean, sd, DATE, file = paste0("output/", city, "/t2m_mean_sd_1999_2017_nat_0.RData"))
 
 ## rea
 mean = array(NaN,c(length(data1),1)) # matrice de probas d'occurrence
@@ -118,7 +130,7 @@ for (seas in 1:4){
 range(mean)
 range(sd)
 DATE = DATE1
-save(mean, sd, DATE, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_rea_0.RData"))
+save(mean, sd, DATE, file = paste0("output/", city, "/t2m_mean_sd_1999_2017_rea_0.RData"))
 ####
 
 #### SAMPLE 100 simulations ####
@@ -140,18 +152,10 @@ Sample_gaussian_temp<- function(par_tt1,par_tt2){
   return(echant)
 }
 
-if (FALSE){
-  for (city in city.names){
-    dir.create(path = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/SIMU"))
-    dir.create(path = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/SIMU/nat"))
-    dir.create(path = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/SIMU/rea"))
-  }
-}
-
-for (city in city.names){
+for (city in city){ # city in city.names
   for (w in c("nat", "rea")){
-    for (k in 0){ # 0: stationary // 1: conditional - slp_SD
-      load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_", w, "_", k, ".RData"))
+    for (k in 0:1){ # 0: stationary // 1: conditional - slp_SD
+      load(paste0("output/", city, "/t2m_mean_sd_1999_2017_", w, "_", k, ".RData"))
       range(mean)
       range(sd)
       
@@ -168,7 +172,7 @@ for (city in city.names){
         Sample=round(Sample,digits=2)
         cat(range(Sample), "\n")
         
-        filesimu = paste('~/Documents/LSCE/SWG/slp_SD_diagnosis/', city, '/SIMU/', w, '/SIMU_SWG_tmean_1999_2017_', w, '_', k, '_run_', NUM, '.RData', sep="")
+        filesimu = paste('output/', city, '/SIMU/', w, '/SIMU_SWG_tmean_1999_2017_', w, '_', k, '_run_', NUM, '.RData', sep="")
         save(Sample,DATE,file = filesimu)
       }
     }
@@ -178,15 +182,15 @@ for (city in city.names){
 
 
 #### separator in season ####
-for (city in city.names){
-  for (k in 0){ # 0: stationary // 1: conditional - slp_SD
+for (city in city){ # city in city.names
+  for (k in 0:1){ # 0: stationary // 1: conditional - slp_SD
     for (i in 1:100){
       NUM=cbind(formatC(i, digits = 0, width = 3, format = "f", flag = "0"))
-      load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/SIMU/nat/SIMU_SWG_tmean_1999_2017_nat_", k, "_run_", NUM, ".RData"))
+      load(paste0("output/", city, "/SIMU/nat/SIMU_SWG_tmean_1999_2017_nat_", k, "_run_", NUM, ".RData"))
       for (seas in 1:4){
         Sample_seas = Sample[DATE$m==MON[seas,1] | DATE$m==MON[seas,2] | DATE$m==MON[seas,3], ]
         DATE_seas   = DATE[DATE$m==MON[seas,1] | DATE$m==MON[seas,2] | DATE$m==MON[seas,3], ]
-        save(DATE_seas, Sample_seas, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/SIMU/nat/SIMU_tmean_1999_2017_nat_", k, "_", SEAS[seas], "_run_", NUM, ".RData"))
+        save(DATE_seas, Sample_seas, file = paste0("output/", city, "/SIMU/nat/SIMU_tmean_1999_2017_nat_", k, "_", SEAS[seas], "_run_", NUM, ".RData"))
       }
     }
   }
@@ -309,7 +313,7 @@ for (city in city.names){
 
 #### Intensity: SAVE d_intensity.RData ####
 for (city in city.names){
-  load(paste0("~/Documents/LSCE/SWG/data/tmean_", city, "_1979_2017.RData"))
+  load(paste0("DATA/tmean_", city, "_1979_2017.RData"))
   DATE_OBS = atoms(timeSequence(from="1979-01-01", to="2017-12-31", by='day'))
   
   Obs = tmean[DATE_OBS$Y>=1999 & DATE_OBS$Y<=2017,]
@@ -320,7 +324,7 @@ for (city in city.names){
   list_mean_sd_rea = vector("list", 2)
   for (k in 1:2){
     i = k-1
-    load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_nat_", i,".RData"))
+    load(paste0("output/", city, "/t2m_mean_sd_1999_2017_nat_", i,".RData"))
     cat(range(mean),'\n')
     cat(range(sd),'\n')
     m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
@@ -329,7 +333,7 @@ for (city in city.names){
     m[,"sd"]   = sd
     list_mean_sd_nat[[k]] = m
     
-    load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_rea_", i,".RData"))
+    load(paste0("output/", city, "/t2m_mean_sd_1999_2017_rea_", i,".RData"))
     cat(range(mean),'\n')
     cat(range(sd),'\n')
     m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
@@ -354,19 +358,20 @@ for (city in city.names){
       i1[k,l] = qnorm(1-p0[k,l], mean = list_mean_sd_nat[[l]][k,"mean"], sd = list_mean_sd_nat[[l]][k,"sd"], lower.tail = T)
     }
   }
+  
   ## d_intensity: 1999-2017
   d = Obs - i1; range(d)
   colnames(d) = c("statio", "slp_SD")
   DATE = as.Date((0:(n-1)), origin = "1999-01-01")
   d$date = DATE
-  save(d, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/d_intensity.RData"))
+  save(d, file = paste0("output/", city, "/d_intensity.RData"))
 }
 ####
 
 
 #### Intensity: plot for each year from 1999 to 2017 ####
 for (city in city.names){
-  load(file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/d_intensity.RData"))
+  load(file = paste0("output/", city, "/d_intensity.RData"))
   
   melt_d = melt(d, id.vars = "date")
   colnames(melt_d) = c("date", "case", "d")
@@ -394,7 +399,7 @@ for (city in city.names){
     p = p + labs(title = paste0("delta_Intensity_tmean_summer_in_", year),
                  x = "date", y = expression(Delta*"I"))
     print(p)
-    dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/d_intensity_tmean_summer_", year, ".pdf"), width = 7, height=7)
+    dev.print(pdf, file=paste0("output/", city, "/Image/d_intensity_tmean_summer_", year, ".pdf"), width = 7, height=7)
     print(year)
   }
 }
@@ -412,7 +417,7 @@ if (cas == 1){
   load(file = paste0("/Volumes/Data-ExFAT/LSCE/SWG/NA_slp_sst/", var, "_anomaly_1979_1998.RData"))
   cas = "2_1979_1998"
 }else if(cas == 3){
-  load(file = paste0("/Volumes/Data-ExFAT/DATA/RData/Anomaly/", var, "_anomaly_1999_2017.RData"))
+  load(file = paste0("DATA/", var, "_anomaly_1999_2017.RData"))
   cas = "3_1999_2017"
 }
 
@@ -425,7 +430,7 @@ data_anomaly = data_anomaly[,,DATE$Y>=1999 & DATE$Y<=2017]
 DATE = DATE[DATE$Y>=1999 & DATE$Y<=2017,]
 
 for (city in city.names){
-  load(file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/d_intensity.RData"))
+  load(file = paste0("output/", city, "/d_intensity.RData"))
   dI = d
   
   {
@@ -446,7 +451,7 @@ for (city in city.names){
         output = paste0(var, "_sup_1999-2017_", season[seas], "_slp_SD_", cas)
         dat = melt(data, varnames = c("long", "lat"))
         plot_worldmap(data = dat, val.limits = c(-100, 100))
-        dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/", output,".pdf"), width = 11, height = 5)
+        dev.print(pdf, file=paste0("output/", city, "/Image/", output,".pdf"), width = 11, height = 5)
       }
       
       
@@ -460,7 +465,7 @@ for (city in city.names){
         output = paste0(var, "_inf_1999-2017_", season[seas], "_slp_SD_", cas)
         dat = melt(data, varnames = c("long", "lat"))
         plot_worldmap(data = dat, val.limits = c(-100, 100))
-        dev.print(pdf, file=paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/", output,".pdf"), width = 11, height = 5)
+        dev.print(pdf, file=paste0("output/", city, "/Image/", output,".pdf"), width = 11, height = 5)
       }
     }
   }
