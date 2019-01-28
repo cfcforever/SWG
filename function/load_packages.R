@@ -46,6 +46,9 @@
   
   # crps
   library(scoringRules)
+  
+  # rainfall model P.Naveau
+  library(mev)
 }
 
 # load function -----------------------------------------------------------
