@@ -1,3 +1,10 @@
+#### load packages -----------------------------------------------------------
+edit(file = "function/load_packages.R")
+source("function/load_packages.R")
+####
+
+
+
 #### Create d_intensity.RData ------------------------------------------------
 load(paste0("DATA/tmean_", city, "_1979_2017.RData"))
 DATE_OBS = atoms(timeSequence(from="1979-01-01", to="2017-12-31", by='day'))
@@ -10,7 +17,7 @@ list_mean_sd_nat = vector("list", 2)
 list_mean_sd_rea = vector("list", 2)
 for (k in 1:2){
   i = k-1
-  load(paste0("output/", city, "/t2m_mean_sd_1999_2017_nat_", i,".RData"))
+  load(paste0(output.dir, city, "/t2m_mean_sd_1999_2017_nat_", i,".RData"))
   cat(range(mean),'\n')
   cat(range(sd),'\n')
   m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
@@ -19,7 +26,7 @@ for (k in 1:2){
   m[,"sd"]   = sd
   list_mean_sd_nat[[k]] = m
   
-  load(paste0("output/", city, "/t2m_mean_sd_1999_2017_rea_", i,".RData"))
+  load(paste0(output.dir, city, "/t2m_mean_sd_1999_2017_rea_", i,".RData"))
   cat(range(mean),'\n')
   cat(range(sd),'\n')
   m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
@@ -50,6 +57,6 @@ d = Obs - i1; range(d)
 colnames(d) = c("stationary", "conditional")
 DATE = as.Date((0:(n-1)), origin = "1999-01-01")
 d$date = DATE
-save(d, file = paste0("output/", city, "/d_intensity.RData"))
+save(d, file = paste0(output.dir, city, "/d_intensity.RData"))
 ####
 
