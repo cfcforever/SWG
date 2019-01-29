@@ -56,6 +56,16 @@
 # source("function/fun_limits.R")
 
 source("function/fun_estimation_t2m.R")
-source("function/fun_estimation_t2m.R")
+source("function/fun_simulation_t2m.R")
+
+source("function/fun_Sample_gaussian_temp.R")
 
 source("function/plot_worldmap.R")
+
+
+# load common variable ----------------------------------------------------
+SEAS   = c('DJF','MAM','JJA','SON')
+season = c('Winter','Spring','Summer','Fall')
+MON    = c(12, 1:11)
+MON    = matrix(MON, nrow=4, ncol=3, byrow=T)
+
