@@ -4,15 +4,6 @@ source("function/load_packages.R")
 
 
 
-#### common variables --------------------------------------------------------
-SEAS   = c('DJF','MAM','JJA','SON')
-season = c('Winter','Spring','Summer','Fall')
-MON    = c(12, 1:11)
-MON    = matrix(MON, nrow=4, ncol=3, byrow=T)
-####
-
-
-
 #### load slp SysDyn ---------------------------------------------------------
 if (!dir.exists("output")){
   dir.create("output")
