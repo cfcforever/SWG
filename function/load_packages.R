@@ -1,5 +1,36 @@
+# set study case and directory --------------------------------------------
+if (!dir.exists("output")){
+  dir.create("output")
+}
+
+# /!\ CHOOSE your case !!! 
+case = 3
+
+if (case == 1){
+  SD = "slp_SD"
+  output.dir = paste0("output/", SD, "/")   # where store output
+  dim.dir   = "DATA/dim_theta/msl_1979-2018_NA_1.5x1.5_dim.RData"
+  theta.dir = "DATA/dim_theta/msl_1979-2018_NA_1.5x1.5_theta.RData"
+}else if(case == 2){
+  SD = "slp_z500_SD"    
+  output.dir = paste0("output/", SD, "/")
+  dim.dir   = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_dim.RData"
+  theta.dir = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_theta.RData"
+}else if(case == 3){
+  SD = "slp_z500_SD_scale"
+  output.dir = paste0("output/", SD, "/")  
+  dim.dir   = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_dim_scale.RData"
+  theta.dir = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_theta_scale.RData"
+}
+
+
+
 # load packages -----------------------------------------------------------
 {
+  # maybe useless
+  library(utils)
+  
+  # NetCDF
   library(ncdf4)
   
   # atoms
@@ -8,7 +39,7 @@
   library(stats4)
   library(VGAM)
   
-  # CramerVonMisesTwoSamples
+  # # CramerVonMisesTwoSamples
   # library(CDFt)
   
   library(ggplot2)
@@ -52,9 +83,6 @@
 }
 
 # load function -----------------------------------------------------------
-# source("function/fun_save_pdf.R")
-# source("function/fun_limits.R")
-
 source("function/fun_estimation_t2m.R")
 source("function/fun_simulation_t2m.R")
 
@@ -68,4 +96,42 @@ SEAS   = c('DJF','MAM','JJA','SON')
 season = c('Winter','Spring','Summer','Fall')
 MON    = c(12, 1:11)
 MON    = matrix(MON, nrow=4, ncol=3, byrow=T)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
