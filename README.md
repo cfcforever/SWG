@@ -2,10 +2,12 @@
 Title: Event Attribution of Climate Changes with Dynamically driven-Stochastic Weather Generators
 
 ## How to run the code
-Please download and RUN `slp_SD_diagnosis.R`
+Please download:
 - [slp_SD_diagnosis.R](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)
 - dossier [**function**](https://github.com/cfcforever/SWG/tree/master/function)
 - dossier [**DATA**](https://github.com/cfcforever/SWG/tree/master/DATA)
+
+Then, run `RUN_code.R`.
 
 ## How to construct conditional SWG
 We use **tmean** as example (see [slp_SD_diagnosis](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)), 
