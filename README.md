@@ -6,6 +6,7 @@ Please download:
 - dossier [**DATA**](https://github.com/cfcforever/SWG/tree/master/DATA)
 - dossier [**function**](https://github.com/cfcforever/SWG/tree/master/function)
 - file [RUN_code.R](https://github.com/cfcforever/SWG/blob/master/RUN_code.R)
+
 Then, run `RUN_code.R`.
 
 ## How to construct conditional SWG
