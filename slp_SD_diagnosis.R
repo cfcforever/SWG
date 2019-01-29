@@ -198,119 +198,6 @@ for (city in city){ # city in city.names
 ####
 
 
-#### FAR ####
-city.names = c("Paris", "Madrid", "Stockholm")
-ens_thres = 10:30
-FAR_cases = c("FAR", "RR", "FARanda")
-ens_year = 1999:2017
-
-for (city in city.names){
-  
-  # city = city.names[1]
-  load(paste0("~/Documents/LSCE/SWG/data/tmean_", city, "_1979_2017.RData"))
-  DATE_OBS = atoms(timeSequence(from="1979-01-01", to="2017-12-31", by='day'))
-  
-  list_mean_sd_nat = vector("list", 2)
-  list_mean_sd_rea = vector("list", 2)
-  for (k in 1:2){
-    i = k-1
-    load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_nat_", i,".RData"))
-    cat(range(mean),'\n')
-    cat(range(sd),'\n')
-    m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
-    colnames(m) = c("mean", "sd")
-    m[,"mean"] = mean
-    m[,"sd"]   = sd
-    list_mean_sd_nat[[k]] = m
-    
-    load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_rea_", i,".RData"))
-    cat(range(mean),'\n')
-    cat(range(sd),'\n')
-    m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
-    colnames(m) = c("mean", "sd")
-    m[,"mean"] = mean
-    m[,"sd"]   = sd
-    list_mean_sd_rea[[k]] = m
-  }
-  
-  Obs = tmean[DATE_OBS$Y>=1999 & DATE_OBS$Y<=2017,]
-  n = length(Obs)
-  DATE = as.Date((0:(n-1)), origin = "1999-01-01")
-  
-  # ens_thres = 10:30
-  list_prob_thres = vector("list", length(ens_thres))
-  names(list_prob_thres) = ens_thres
-  for (thres in ens_thres){
-    list_prob_thres_nat = lapply(list_mean_sd_nat, FUN = function(m){
-      pnorm(thres, mean = m[,"mean"], sd = m[,"sd"], lower.tail = F)
-    })
-    prob_thres_nat = do.call(rbind.data.frame, list_prob_thres_nat)
-    colnames(prob_thres_nat) = "nat"
-    
-    list_prob_thres_rea = lapply(list_mean_sd_rea, FUN = function(m){
-      pnorm(thres, mean = m[,"mean"], sd = m[,"sd"], lower.tail = F)
-    })
-    prob_thres_rea = do.call(rbind.data.frame, list_prob_thres_rea)
-    colnames(prob_thres_rea) = "rea"
-    
-    prob_thres = cbind(prob_thres_nat, prob_thres_rea)
-    prob_thres$date = rep(DATE, ncase)
-    
-    prob_thres$FAR     = 1 - prob_thres$nat/prob_thres$rea
-    prob_thres$RR      = prob_thres$rea/prob_thres$nat
-    prob_thres$FARanda = (prob_thres$rea-prob_thres$nat)/(prob_thres$nat+prob_thres$rea)
-    
-    prob_thres$case = rep(case_name, each = length(DATE))
-    prob_thres$thres = thres
-    prob_thres$year = year(prob_thres$date)
-    prob_thres$num = as.numeric(prob_thres$date)
-    
-    list_prob_thres[[as.character(thres)]] = prob_thres
-  }
-  
-  prob_thres = do.call(rbind.data.frame, list_prob_thres)
-  
-  cc <- c("red", "blue")
-  
-  for (FAR_case in FAR_cases){
-    for (year in ens_year){
-      
-      # FAR_case = FAR
-      # year = 2003
-      s = which(month(prob_thres$date)==7|month(prob_thres$date)==6|month(prob_thres$date)==8)
-      period_sel = intersect(which(year(prob_thres$date)==year), s)
-      FAR_sel = prob_thres[period_sel,]
-      FAR_sel$case <- factor(FAR_sel$case, levels = case_name)
-      
-      breaks = rep(NA,3)
-      labels = rep(NA,3)
-      for (k in 1:3){
-        breaks[k] = FAR_sel$num[which(month(FAR_sel$date)==unique(month(FAR_sel$date))[k])[1]]
-        labels[k] = as.character(FAR_sel$date[which(month(FAR_sel$date)==unique(month(FAR_sel$date))[k])[1]])
-      }
-      
-      saveGIF(
-        for (thres in ens_thres){
-          p <- ggplot(FAR_sel, aes(x=num, y=FARanda, group=case, col=case)) + 
-            geom_blank() +
-            geom_line(data = FAR_sel[FAR_sel$thres==thres,], mapping = aes(x=num, y=FARanda, group=case, col=case)) + theme_bw() +
-            scale_color_manual(values = cc, name = "") + 
-            scale_x_continuous(breaks = breaks, labels = labels) +
-            labs(x = "date") +
-            ggtitle(paste0(FAR_case, " for summer in ", year, " over ", thres, " degree"))
-          print(p)
-          # ggsave(plot = p, filename = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", i, ".png"), units = "in", dpi = 300, width = 7, height = 7)
-          # dev.print(pdf, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", year, ".pdf"), width = 7, height = 7)
-          # dev.print(png, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", i, ".png"), width = 700, height = 700)
-        }, 
-        ani.width = 200*7, ani.height = 200*7, ani.res = 200, interval = 0.5, autobrowse = F,
-        movie.name = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/FAR/", FAR_case, "_summer_in_", year, ".gif")
-      )
-    }
-  }
-}
-####
-
 #### Intensity: SAVE d_intensity.RData ####
 for (city in city.names){
   load(paste0("DATA/tmean_", city, "_1979_2017.RData"))
@@ -547,6 +434,119 @@ for (city in city.names){
 }
 ####
 
+
+#### FAR ####
+city.names = c("Paris", "Madrid", "Stockholm")
+ens_thres = 10:30
+FAR_cases = c("FAR", "RR", "FARanda")
+ens_year = 1999:2017
+
+for (city in city.names){
+  
+  # city = city.names[1]
+  load(paste0("~/Documents/LSCE/SWG/data/tmean_", city, "_1979_2017.RData"))
+  DATE_OBS = atoms(timeSequence(from="1979-01-01", to="2017-12-31", by='day'))
+  
+  list_mean_sd_nat = vector("list", 2)
+  list_mean_sd_rea = vector("list", 2)
+  for (k in 1:2){
+    i = k-1
+    load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_nat_", i,".RData"))
+    cat(range(mean),'\n')
+    cat(range(sd),'\n')
+    m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
+    colnames(m) = c("mean", "sd")
+    m[,"mean"] = mean
+    m[,"sd"]   = sd
+    list_mean_sd_nat[[k]] = m
+    
+    load(paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/t2m_mean_sd_1999_2017_rea_", i,".RData"))
+    cat(range(mean),'\n')
+    cat(range(sd),'\n')
+    m = as.data.frame(matrix(NA, nrow = nrow(mean), ncol = 2))
+    colnames(m) = c("mean", "sd")
+    m[,"mean"] = mean
+    m[,"sd"]   = sd
+    list_mean_sd_rea[[k]] = m
+  }
+  
+  Obs = tmean[DATE_OBS$Y>=1999 & DATE_OBS$Y<=2017,]
+  n = length(Obs)
+  DATE = as.Date((0:(n-1)), origin = "1999-01-01")
+  
+  # ens_thres = 10:30
+  list_prob_thres = vector("list", length(ens_thres))
+  names(list_prob_thres) = ens_thres
+  for (thres in ens_thres){
+    list_prob_thres_nat = lapply(list_mean_sd_nat, FUN = function(m){
+      pnorm(thres, mean = m[,"mean"], sd = m[,"sd"], lower.tail = F)
+    })
+    prob_thres_nat = do.call(rbind.data.frame, list_prob_thres_nat)
+    colnames(prob_thres_nat) = "nat"
+    
+    list_prob_thres_rea = lapply(list_mean_sd_rea, FUN = function(m){
+      pnorm(thres, mean = m[,"mean"], sd = m[,"sd"], lower.tail = F)
+    })
+    prob_thres_rea = do.call(rbind.data.frame, list_prob_thres_rea)
+    colnames(prob_thres_rea) = "rea"
+    
+    prob_thres = cbind(prob_thres_nat, prob_thres_rea)
+    prob_thres$date = rep(DATE, ncase)
+    
+    prob_thres$FAR     = 1 - prob_thres$nat/prob_thres$rea
+    prob_thres$RR      = prob_thres$rea/prob_thres$nat
+    prob_thres$FARanda = (prob_thres$rea-prob_thres$nat)/(prob_thres$nat+prob_thres$rea)
+    
+    prob_thres$case = rep(case_name, each = length(DATE))
+    prob_thres$thres = thres
+    prob_thres$year = year(prob_thres$date)
+    prob_thres$num = as.numeric(prob_thres$date)
+    
+    list_prob_thres[[as.character(thres)]] = prob_thres
+  }
+  
+  prob_thres = do.call(rbind.data.frame, list_prob_thres)
+  
+  cc <- c("red", "blue")
+  
+  for (FAR_case in FAR_cases){
+    for (year in ens_year){
+      
+      # FAR_case = FAR
+      # year = 2003
+      s = which(month(prob_thres$date)==7|month(prob_thres$date)==6|month(prob_thres$date)==8)
+      period_sel = intersect(which(year(prob_thres$date)==year), s)
+      FAR_sel = prob_thres[period_sel,]
+      FAR_sel$case <- factor(FAR_sel$case, levels = case_name)
+      
+      breaks = rep(NA,3)
+      labels = rep(NA,3)
+      for (k in 1:3){
+        breaks[k] = FAR_sel$num[which(month(FAR_sel$date)==unique(month(FAR_sel$date))[k])[1]]
+        labels[k] = as.character(FAR_sel$date[which(month(FAR_sel$date)==unique(month(FAR_sel$date))[k])[1]])
+      }
+      
+      saveGIF(
+        for (thres in ens_thres){
+          p <- ggplot(FAR_sel, aes(x=num, y=FARanda, group=case, col=case)) + 
+            geom_blank() +
+            geom_line(data = FAR_sel[FAR_sel$thres==thres,], mapping = aes(x=num, y=FARanda, group=case, col=case)) + theme_bw() +
+            scale_color_manual(values = cc, name = "") + 
+            scale_x_continuous(breaks = breaks, labels = labels) +
+            labs(x = "date") +
+            ggtitle(paste0(FAR_case, " for summer in ", year, " over ", thres, " degree"))
+          print(p)
+          # ggsave(plot = p, filename = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", i, ".png"), units = "in", dpi = 300, width = 7, height = 7)
+          # dev.print(pdf, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", year, ".pdf"), width = 7, height = 7)
+          # dev.print(png, file = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", i, ".png"), width = 700, height = 700)
+        }, 
+        ani.width = 200*7, ani.height = 200*7, ani.res = 200, interval = 0.5, autobrowse = F,
+        movie.name = paste0("~/Documents/LSCE/SWG/slp_SD_diagnosis/", city, "/Image/FAR/", FAR_case, "_summer_in_", year, ".gif")
+      )
+    }
+  }
+}
+####
 
 #### dim and theta depend on temperature ####
 var = "slp"
