@@ -3,9 +3,10 @@ Title: Event Attribution of Climate Changes with Dynamically driven-Stochastic W
 
 ## How to run the code
 Please download:
-- [slp_SD_diagnosis.R](https://github.com/cfcforever/SWG/blob/master/slp_SD_diagnosis.R)
-- dossier [**function**](https://github.com/cfcforever/SWG/tree/master/function)
 - dossier [**DATA**](https://github.com/cfcforever/SWG/tree/master/DATA)
+- dossier [**function**](https://github.com/cfcforever/SWG/tree/master/function)
+- file [RUN_code.R](https://github.com/cfcforever/SWG/blob/master/RUN_code.R)
+- file [conditional_SWG_temperature.R](https://github.com/cfcforever/SWG/blob/master/conditional_SWG_temperature.R)
 
 Then, run `RUN_code.R`.
 
