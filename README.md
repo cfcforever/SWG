@@ -25,6 +25,7 @@ You shall download [`conditional_SWG_temperature.R`](https://github.com/cfcforev
 1. FAR
 2. Changes of intensity
 3. Anomaly maps
+You shall download [slp_anomaly_1999_2017.RData](https://mycore.core-cloud.net/index.php/s/JdnEiC2CNynjOEb) for anomaly maps.
 
 
 ## To complete
