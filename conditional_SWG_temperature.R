@@ -1,25 +1,5 @@
-if (!dir.exists("output")){
-  dir.create("output")
-}
-
-case = 3
-
-if (case == 1){
-  output.dir = "output/slp_SD/"   # where store output
-  dim.dir   = "DATA/dim_theta/msl_1979-2018_NA_1.5x1.5_dim.RData"
-  theta.dir = "DATA/dim_theta/msl_1979-2018_NA_1.5x1.5_theta.RData"
-}else if(case == 2){
-  output.dir = "output/slp_z500_SD/"   
-  dim.dir   = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_dim.RData"
-  theta.dir = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_theta.RData"
-}else if(case == 3){
-  output.dir = "output/slp_z500_SD_scale/"   
-  dim.dir   = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_dim_scale.RData"
-  theta.dir = "DATA/dim_theta/msl_z500_19790101-20180731_NA_1.5x1.5_theta_scale.RData"
-}
-
-
 #### load packages -----------------------------------------------------------
+edit(file = "function/load_packages.R")
 source("function/load_packages.R")
 ####
 
@@ -139,8 +119,8 @@ for (seas in 1:4){
   mean[idxdates1,] = mean(data2[idxdates2])   ; cat(mean(data2[idxdates2]), "\n"); cat(mean(data1[idxdates1]), "\n")
   sd[idxdates1,]   = sd(data2[idxdates2])     ; #cat(sd(data2[idxdates2])  , "\n"); cat(sd(data1[idxdates1]), "\n")
 }
-range(mean)
-range(sd)
+# range(mean)
+# range(sd)
 DATE = DATE1
 save(mean, sd, DATE, file = paste0(output.dir, city, "/t2m_mean_sd_1999_2017_nat_0.RData"))
 
@@ -151,11 +131,11 @@ sd = array(NaN,c(length(data1),1))
 for (seas in 1:4){
   idxdates1 = which(DATE1['m']==MON[seas,1] | DATE1['m']==MON[seas,2] | DATE1['m']==MON[seas,3])
   
-  mean[idxdates1,] = mean(data1[idxdates1])   ; cat(mean(data1[idxdates1]), "\n")
+  mean[idxdates1,] = mean(data1[idxdates1])   ; # cat(mean(data1[idxdates1]), "\n")
   sd[idxdates1,]   = sd(data1[idxdates1]) 
 }
-range(mean)
-range(sd)
+# range(mean)
+# range(sd)
 DATE = DATE1
 save(mean, sd, DATE, file = paste0(output.dir, city, "/t2m_mean_sd_1999_2017_rea_0.RData"))
 ####
