@@ -61,5 +61,5 @@ fun_simulation <- function(predictor, NUM, parameter, output, type,
     
   } # end for seas
   
-  save(sd, mean, file = paste0(output, "t2m_mean_sd_", y1, "_", y2, "_", type, "_", NUM, ".RData"))
+  save(sd, mean, file = paste0(output, "/t2m_mean_sd_", y1, "_", y2, "_", type, "_", NUM, ".RData"))
 }
