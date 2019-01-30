@@ -29,7 +29,7 @@ You shall download [slp_anomaly_1999_2017.RData](https://mycore.core-cloud.net/i
 
 
 ## To complete
-### Coordinations
+### Coordinates
 
 | Name                      | Domain                |
 | ------------------------- |:---------------------:|
