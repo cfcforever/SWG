@@ -36,6 +36,9 @@ You shall download [slp_anomaly_1999_2017.RData](https://mycore.core-cloud.net/i
 | Northern Atlantic         | [22N, 71N]x[81W, 51E] |
 | Northern Atlantic (small) | [30N, 71N]x[30W, 51E] |
 | Europe                    | [35N, 60N]x[10W, 25E] |
+| Paris (region)            | [48N, 50N]x[01E, 04E] |
+| Madrid (region)           | [39N, 41N]x[02W, 05W] |
+| Stockholm (region)        | [58N, 60N]x[16E, 19E] |
 
 
 ### Function
